@@ -1,0 +1,35 @@
+/* CSS Document */
+
+.caixa_login{
+	width:400px;
+	height:300px;
+	margin:20px auto;
+	border: solid 1px #CCC;
+	border-radius:10px;
+	padding:20px;
+}
+
+
+.caixa_login h3{
+	font:15px Arial, Helvetica, sans-serif;
+	color:#FFF;
+	background:#900;
+	text-align:center;
+	padding:5px;
+	width:250px;
+	
+	
+}
+
+.rodape{
+	text-align:center;
+	background-color: #DBDBDB;
+	color:#5F5F5F;
+	height:50px;
+	line-height:45px;
+	font-size:14px;
+	float:left;
+	
+	width:100%;
+	margin-top:15px;
+}
