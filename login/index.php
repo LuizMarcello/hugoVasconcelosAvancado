@@ -57,10 +57,30 @@
                         //mysqli_num_rows(): Função nativa que obtém o número 
                         //de linhas de um resultado(SELECT):
                         if(mysqli_num_rows($result) > 0){
-                            echo "<h3>Tem o registro no banco</h3>";
+                            //Usuário existe. Capturando as informações dele: 
+                            //Função nativa 'mysqli_fetch_array()', que vai percorrer
+                            //todo o registro dele, encontrado na variável '$result':
+                            while($res = mysqli_fetch_array($result)){
+                                //Vão receber os valores que estão nos referidos campos:
+                                $status = $res['status'];
+                                $email = $res['email'];
+                                $senha = $res['senha'];
+                                $nome = $res['nome'];
+                             }
+
+                             if($status === 'inativo'){
+                                echo "<h3>Usuário inativo, procure a administração!</h3>";
+                             }else{
+                                 //Função nativa do php, para iniciar a sessão do login:
+                                 session_start();
+                                 //Script de direcionamento
+                                 echo "<script language='javascript'>
+                                 window.location='admin.php';
+                                 </script>";
+                             }
 
                         }else{
-                            echo "<h3>Não tem o registro no banco</h3>"; 
+                            echo "<h3>Usuário Inexistente!!!</h3>"; 
                         }
                     }
 
