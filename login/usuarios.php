@@ -10,13 +10,21 @@ include "conexao.php";
 ?>
 </head>
 
+<!--Método "GET" é o mais indicado para o envio de variáveis.-->
+<!--Método "POST" é o mais indicado para o envio de informações em formulários(tag <form></form>).-->
+<!--Só é possível abrir 'blocos php' dentro de uma edição html, se o arquivo for extensão '.php'-->
+<!--Qualquer tag do HTML dentro de um bloco PHP, tem que ser entre "aspas duplas":-->
+
 <body>
 <div id="box_usuarios">
 <br /><br />
-<a class="a2" href="">Cadastrar Usuário</a>
+<a class="a2" href="usuarios.php?pg=cadastra">Cadastrar Usuário</a>
 <h1>Usuário</h1>
 
-
+    <!-- BUSCAR OS USUÀRIOS -->
+    <?php
+        $sql = "SELECT * FROM usuarios WHERE nome != '' ";
+    ?>
 
     <table width="900" border="0">
       <tr>
@@ -46,7 +54,7 @@ include "conexao.php";
         <a class="a" href=""><img title="Inativar Usuário(a)" src="img/ico_bloqueado.png" width="18" height="18" border="0"></a>
         
         
-        <a class="a" href=""><img title="Editar Dados Cadastrais" src="img/ico-editar.png" width="18" height="18" border="0"></a>
+        <a class="a" href="usuarios.php?pg=edita"><img title="Editar Dados Cadastrais" src="img/ico-editar.png" width="18" height="18" border="0"></a>
        </td>
       </tr>
      
@@ -54,10 +62,10 @@ include "conexao.php";
 
 <br />
 
-
-
-
-
+<!--$_GET: Array nativo, associativo, super-global de variáveis, passado via HTTP GET:--> 
+<!--Se, via método GET, a variável 'pg' receber 'edita', então executa o referido <form>:-->
+<!--Abre e fecha o bloco php só para iniciar o 'if' e abrir as chaves: -->
+<?php if(@$_GET['pg'] == 'edita'){ ?>
 <hr />
 <h1>Editar Usuarios</h1>
 
@@ -101,16 +109,18 @@ include "conexao.php";
   </table>
 
 </form>
-
-
-
+<!--Abre e fecha o bloco php novamente, só para fechar as chaves do 'if' acima:-->
+<?php } ?>
 
 
 
 </div>
 
 
-
+<!--$_GET: Array nativo, associativo, super-global de variáveis, passado via HTTP GET:--> 
+<!--Se, via método GET, a variável 'pg' receber 'cadastra', então executa a referida <div>:-->
+<!--Abre e fecha o bloco php só para iniciar o 'if' e abrir as chaves: -->
+<?php if(@$_GET['pg'] == 'cadastra'){ ?>
 
 <div id="cadastra_usuarios">  
 <h1>Cadastrar novo Usuário</h1>
@@ -153,6 +163,10 @@ include "conexao.php";
 </form>
 <br />
 </div>
+<!--Abre e fecha o bloco php novamente, só para fechar as chaves do 'if' acima:-->
+<?php } ?>
+
+
 
 
 
