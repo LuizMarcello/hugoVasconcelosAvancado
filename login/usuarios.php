@@ -8,6 +8,8 @@
 <?php 
 include "conexao.php";
 ?>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <!--Método "GET" é o mais indicado para o envio de variáveis.-->
@@ -16,6 +18,30 @@ include "conexao.php";
 <!--Qualquer tag do HTML dentro de um bloco PHP, tem que ser entre "aspas duplas":-->
 
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="admin.php">Administrador</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="usuarios.php">Usuários</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="arquivos.php">Uploads</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Contatos</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
 <div id="box_usuarios">
 <br /><br />
 <a class="a2" href="usuarios.php?pg=cadastra">Cadastrar Usuário</a>
@@ -29,9 +55,9 @@ include "conexao.php";
         $sql = "SELECT * FROM usuarios WHERE nome != '' ";
         //Função nativa do php, para executar a consulta no banco de dados:
         //A nova vriável '$result' receberá o resultado na consulta:
-        $result = mysqli_query($conexao, $sql);
+        $result_1 = mysqli_query($conexao, $sql);
         //Função nativa que verifica o número de linhas encontradas após uma consulta:
-        if(mysqli_num_rows($result) == ''){
+        if(mysqli_num_rows($result_1) == ''){
           echo "<h2> Não existem usuários cadastrados </h2>";
         }
         
@@ -50,14 +76,14 @@ include "conexao.php";
       <?php
       //Função nativa 'mysqli_fetch_array()': Busca as informações
       //do resultado das linhas da consulta acima, através de um
-      //array, e a variável $res_1(array) recebe os valores:
-      while($res_1 = mysqli_fetch_array($result)){
+      //array, e a variável $res_s(array) recebe os valores:
+      while($res_s = mysqli_fetch_array($result_1)){
         //Será repetido enquanto houver mais cadastros:
-        $id=$res_1['id']; 
-        $email=$res_1['email']; 
-        $nome=$res_1['nome']; 
-        $senha=$res_1['senha']; 
-        $status=$res_1['status']; 
+        $id=$res_s['id']; 
+        $email=$res_s['email']; 
+        $nome=$res_s['nome']; 
+        $senha=$res_s['senha']; 
+        $status=$res_s['status']; 
       ?>
 
      
@@ -70,7 +96,7 @@ include "conexao.php";
         <td></td>
         <td>
 
-        <a class="a" href=""><img title="Excluir Usuário" src="img/deleta.jpg" width="18" height="18" border="0"></a>
+        <a class="a" href="usuarios.php?pg=deleta&id=<?php echo $id; ?>"><img title="Excluir Usuário" src="img/deleta.jpg" width="18" height="18" border="0"></a>
 
         <?php if($status == 'inativo'){ ?>
         <a class="a" href="usuarios.php?pg=todos&func=ativa&id=<?php echo $id; ?>"><img title="Ativar novamente usuário"
@@ -82,7 +108,7 @@ include "conexao.php";
         src="img/ico_bloqueado.png" width="18" height="18" border="0"></a>
         <?php } ?>
 
-        <a class="a" href="usuarios.php?pg=edita"><img title="Editar Dados Cadastrais" src="img/ico-editar.png" width="18" height="18" border="0"></a>
+        <a class="a" href="usuarios.php?pg=edita&id=<?php echo $id; ?>"><img title="Editar Dados Cadastrais" src="img/ico-editar.png" width="18" height="18" border="0"></a>
        </td>
       </tr><!--Toda essa linha está dentro do while-->
 
@@ -95,11 +121,59 @@ include "conexao.php";
 <!-- EDITANDO O USUÁRIO -->
 
 <!--$_GET: Array nativo, associativo, super-global de variáveis, passado via HTTP GET:--> 
-<!--Se, via método GET, a variável 'pg' receber 'edita', então executa o referido <form>:-->
+<!--Se, via método GET, a variável 'pg' receber 'edita', então é executado
+    o próximo bloco php e o referido <form>, para edição do usuário:-->
 <!--Abre e fecha o bloco php só para iniciar o 'if' e abrir as chaves: -->
 <?php if(@$_GET['pg'] == 'edita'){ ?>
 <hr />
 <h1>Editar Usuarios</h1>
+
+<?php
+$id = $_GET['id'];
+
+$sql = "SELECT * FROM usuarios WHERE id = '$id'";
+//Função nativa do php, para executar a consulta no banco de dados:
+//A nova variável '$consulta' receberá o resultado na consulta:
+$consulta = mysqli_query($conexao, $sql);
+//Função nativa 'mysqli_fetch_array()' do php7: Busca as informações
+//do resultado das linhas da consulta acima, através de um
+//array, e a variável $res_2(array) recebe os valor:
+//Quando clicar no 'Editar dados cadastrais', os dados referente ao
+//usuário deste 'id' estarão neste variável '$res_2', e desta
+//irão para os referidos campos no formulário que foi aberto para
+//edição, para serem editados, e depois atualizados no bd.
+while($res_2 = mysqli_fetch_array($consulta)){
+  
+//$_POST: Array nativo para verificar se houve algum HTTTP POST:
+//Se existir 'POST'(informações recuperadas do formulário<form></form>)
+//no botão com o name 'button'(value 'Atualizar'), depois da edição:
+if(isset($_POST['button'])){
+
+  //Novas informações recuperadas durante a edição dos campos 
+  //do usuário a ser editado, do formulário abaixo:
+  $nome = $_POST['nome'];
+  $email = $_POST['email'];
+  $senha = $_POST['senha'];
+  $status = $_POST['status'];
+
+  $sql = "UPDATE usuarios SET nome = '$nome', email = '$email', senha = '$senha',
+  status = '$status' WHERE id = '$id' ";
+  $result_2 = mysqli_query($conexao, $sql);
+
+  if($result_2 == ''){
+    //Script javascript para fazer uma mensagem de alerta: 
+    echo "<script language='javascript'>
+        window.alert('Ocorreu um êrro ao editar!');
+    </script>";
+}else{
+    //Script javascript para fazer uma mensagem de alerta: 
+    echo "<script language='javascript'>
+        window.alert('Usuário editado com sucesso!');
+        window.location='usuarios.php';
+    </script>";
+}
+}
+?>
 
 <form name="form1" method="post" action="" enctype="multipart/form-data">
   <table width="900" border="0">
@@ -110,10 +184,10 @@ include "conexao.php";
     </tr>
     <tr>
       <td><label for="textfield2"></label>
-      <input type="text" name="nome" id="textfield2" value=""></td>
+      <input type="text" name="nome" id="textfield2" value="<?php echo $res_2['nome']; ?>"></td>
       <td><label for="textfield3"></label>
-      <input type="text" name="email" id="textfield3" value=""></td>
-      <td><input type="text" name="senha" id="textfield8" value=""></td>
+      <input type="text" name="email" id="textfield3" value="<?php echo $res_2['email']; ?>"></td>
+      <td><input type="text" name="senha" id="textfield8" value="<?php echo $res_2['senha']; ?>"></td>
     </tr>
     <tr>
       <td>Status:</td>
@@ -123,10 +197,10 @@ include "conexao.php";
       
       <td><label for="select"></label>
         <select name="status" size="1" id="select">
-      <!--<option value=""></option>
-          <option value=""></option>-->
-          <option value="Ativo">Ativo</option>
-          <option value="Inativo">Inativo</option>
+          <option value="<?php echo $res_2['status']; ?>"><?php echo $res_2['status']; ?></option>
+          <!---<option value=""></option>-->
+          <option value="ativo">Ativo</option>
+          <option value="inativo">Inativo</option>
           
       </select></td>
      
@@ -140,8 +214,12 @@ include "conexao.php";
 
 </form>
 
-<!--Abre e fecha o bloco php novamente, só para fechar as chaves do 'if' acima:-->
-<?php } ?>
+<!--Abre e fecha o bloco php novamente, só para fechar as chaves:-->
+<?php } } ?>
+<!--Final do bloco 'if pg=edita'-->
+<!--Final do bloco 'while mysqli_fetch_array'-->
+
+<!-- FIM DA EDIÇÂO DO USUÁRIO -->
 
 </div>
 
@@ -191,6 +269,7 @@ include "conexao.php";
       //Script javascript para fazer uma mensagem de alerta: 
       echo "<script language='javascript'>
           window.alert('Usuário cadastrado com sucesso!');
+          window.location='usuarios.php';
       </script>";
   }
 
@@ -282,6 +361,26 @@ include "conexao.php";
      
       
     }
+?>
+
+<!-- EXCLUINDO O USUÁRIO -->
+
+<!--$_GET: Array nativo, associativo, super-global de variáveis, passado via HTTP GET:--> 
+<!--Se, via método GET, a variável 'pg' receber 'deleta', ??????:-->
+<!--O '@' é para não ficar dando alertas, caso o objeto não exista: -->
+<?php
+     if(@$_GET['pg'] == 'deleta'){
+          $id = $_GET['id'];
+          //$res_2['nome'];
+          $sql = "DELETE FROM usuarios WHERE id = '$id' ";
+          //Executando a consulta de deleção do usuário no bd:
+          mysqli_query($conexao, $sql);
+          //Script javascript para fazer o redirecionamento para a mesma
+          //página(usuarios.php), dando um refresh na página.
+          echo "<script language='javascript'>
+          window.location='usuarios.php';
+          </script>";
+     }
 ?>
 
 <br />
