@@ -13,7 +13,7 @@ body{
     border: 5px solid #EEE;
     padding: 10px;
     border-radius: 8px;
-    margin-top: 150px;
+    margin-top: 100px;
 }
 
 select{
@@ -29,4 +29,13 @@ input[type=submit]{
 input[type=file]{
     padding: 5px;
     margin: 6px;
+}
+
+.imagens{
+    width: 500px;
+    margin-top: 50px;
+}
+
+.imagens img{
+    width: 100px;
 }

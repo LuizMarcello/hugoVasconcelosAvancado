@@ -1,13 +1,15 @@
 <?php
 //Esta é uma classe usada para upload de arquivos e imagens.
-class Upload {
+class Upload
+{
     private $arrFormatImages;
     private $arrFormatFiles;
-    public function __construct() {
+    public function __construct()
+    {
         $this->arrFormatImages = array(
             "image/jpeg",
             "image/png"
-            
+
         );
         $this->arrFormatFiles = array(
             "application/x-compressed",
@@ -17,6 +19,7 @@ class Upload {
             "application/x-compressed",
             "application/x-gzip",
             "text/html",
+            "text/txt",
             "application/octet-stream",
             "application/x-gzip",
             "multipart/x-gzip",
@@ -28,7 +31,8 @@ class Upload {
      * img  - Is image files, all array formats 'arrFormatImages' images are accepted
      * file - Is compressed files, all array formats 'arrFormatFiles' are accepted.
      */
-    public function LoadFile($path, $type, $file, $renameFile = true) {
+    public function LoadFile($path, $type, $file, $renameFile = true)
+    {
         $fl = $file['type'];
         $validFormat = false;
         if ($type == "img") {
@@ -61,4 +65,3 @@ class Upload {
         }
     }
 }
-?>
